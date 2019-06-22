@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>regression</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<style>
+	</style>
+</head>
+
+<body>
+	<img src="static/INDPRO.png">
+	<img src="static/UNRATE.png">
+	<form action="/svr" method = "POST">
+		<label for="modelname">model</label>
+		<select name="modelname">
+			<option value="SVR-RBF">SVR-RBF</option>
+		</select>
+		<label for="C">C</label>
+		<input name="C" type="number" id="C" value={{C_default}}>
+		<label for="gamma">gamma</label>
+		<input name="gamma" type="number" id="gamma" value={{gamma_default}} step=0.01>
+		<input type="submit" value="regression">
+	</form>
+	{% block content %}{% endblock %}
+</body>
+
+</html>
