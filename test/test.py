@@ -9,6 +9,7 @@ from collections import OrderedDict
 import numpy as np
 app = Flask(__name__, static_url_path='/static')
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+app.run(host = '0.0.0.0',port=80)
 
 class BadData(Exception):
     pass
