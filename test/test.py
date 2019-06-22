@@ -81,9 +81,11 @@ def oldest(date1, date2, date3):
 
 @app.route('/', methods=['GET', 'POST'])
 def init():
+    #data load
     GDP_list = GDPCSVReader('./A191RL1Q225SBEA.CSV').load()
     INDPRO_list = INDPROCSVReader('./INDPRO.CSV').load()
     UNRATE_list = UNRATECSVReader('./UNRATE.CSV').load()
+    #find time range
     start_year = oldest(GDP_list[0][0], INDPRO_list[0][0], UNRATE_list[0][0])[0:4]
     year_range = int(newest(GDP_list[len(GDP_list) - 1][0], INDPRO_list[len(INDPRO_list) - 1][0], UNRATE_list[len(UNRATE_list) - 1][0])[0:4]) - int(start_year)
     print(year_range)
@@ -99,6 +101,7 @@ def init():
     x = []
     INDPRO_value = []
     UNRATE_value = []
+    #data format
     for i in range(year_range * 4):
         x_temp = []
         time_set.append(GDP_list[GDP_index][0][0:4])
@@ -111,9 +114,11 @@ def init():
         UNRATE_value.append(x_temp[1])
         UNRATE_index += 3
         x.append(x_temp)
+    #store data
     np.save("x_storage", x)
     np.save("y_storage", y)
     np.save("time_storage", time_set)
+    #draw picture
     plt.plot(time_set, INDPRO_value, color='navy', lw=2, label='INDPRO')
     plt.xlabel('date')
     plt.ylabel('INDPRO')
@@ -136,10 +141,9 @@ def init():
     plt.close()
     return render_template('base.html', C_default = 1000, gamma_default = 0.4)
 
-
-@app.route('/svr', methods=['GET', 'POST'])
-def svr():
-    """reg = LinearRegression().fit(x, y)
+"""
+    other model tried
+    reg = LinearRegression().fit(x, y)
     print("linear")
     print(reg.score(x,y))
     print(reg.coef_)
@@ -157,15 +161,18 @@ def svr():
     -2353.0260690695486
     print(svr_poly.get_params())
     print(svr_poly.score(x,y))"""
+@app.route('/svr', methods=['GET', 'POST'])
+def svr():
     if request.method == 'POST':
-        #x = np.array(np.load("x_storage.npy")).astype(float)
-        #y = np.array(np.load("y_storage.npy")).astype(float)
+        #load data
         x = np.load("x_storage.npy")
         y = np.load("y_storage.npy")
         time_set = np.load("time_storage.npy")
+        #regression
         svr_rbf = SVR(kernel='rbf', C=float(request.form['C']), gamma=float(request.form['gamma']))
         svr_rbf.fit(x,y)
         y_rbf = svr_rbf.predict(x)
+        #draw picture
         plt.scatter(time_set, y, color='darkorange', label='data')
         plt.plot(time_set, y_rbf, color='navy', lw=2, label='RBF model')
         plt.xlabel('date')
