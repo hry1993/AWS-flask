@@ -84,9 +84,9 @@ def oldest(date1, date2, date3):
 @app.route('/', methods=['GET', 'POST'])
 def init():
     #data load
-    GDP_list = GDPCSVReader('A191RL1Q225SBEA.CSV').load()
-    INDPRO_list = INDPROCSVReader('INDPRO.CSV').load()
-    UNRATE_list = UNRATECSVReader('UNRATE.CSV').load()
+    GDP_list = GDPCSVReader('A191RL1Q225SBEA.csv').load()
+    INDPRO_list = INDPROCSVReader('INDPRO.csv').load()
+    UNRATE_list = UNRATECSVReader('UNRATE.csv').load()
     #find time range
     start_year = oldest(GDP_list[0][0], INDPRO_list[0][0], UNRATE_list[0][0])[0:4]
     year_range = int(newest(GDP_list[len(GDP_list) - 1][0], INDPRO_list[len(INDPRO_list) - 1][0], UNRATE_list[len(UNRATE_list) - 1][0])[0:4]) - int(start_year)
